@@ -1,0 +1,26 @@
+version: '3.6'
+services:
+
+    mysql:
+        image: "mysql:latest"
+        container_name: mysql_server
+        command: ['--default-authentication-plugin=mysql_native_password']
+        environment:
+            - MYSQL_DATABASE=default_db
+            - MYSQL_ROOT_PASSWORD=my-pass
+            - MYSQL_USER=user-name
+            - MYSQL_PASSWORD=my-user-pass
+        volumes:
+            - mysqldata:/var/lib/mysql
+        ports:
+            - 3306:3306
+        networks:
+            network:
+        #restart: always
+
+volumes:
+    mysqldata:
+
+networks:
+    # create Network By Default with directory name
+    network:

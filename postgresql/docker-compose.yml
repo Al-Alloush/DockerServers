@@ -1,0 +1,54 @@
+version: '3.6'
+services: 
+    web:
+        build: .
+        container_name: python_app
+        #  mount this image as volume to don't rebuild the image all the time.
+        volumes: 
+            - .:/code
+        environment: 
+            FLASK_DEBUG: 1
+            FLASK_ENV: devalopment
+        entrypoint: 
+            - python
+            - app.py
+        ports: 
+            - "5000:5000"
+        networks: 
+            network:
+                
+    postgresDB:
+        image: postgres
+        container_name: postgres_db
+        environment:
+            POSTGRES_USER: user
+            POSTGRES_PASSWORD: example
+        volumes:
+            # to edit the config file:
+            # $ docker exec -it postgres_db bash
+            # $ apt-get update
+            # $ apt-get install nano
+            # $ cd var/lib/postgresql/data
+            # $ nano postgresql.conf
+            # $ nano var/lib/postgresql/data/postgresql.conf
+            - postgresVolume:/var/lib/postgresql/data
+
+        restart: always
+        networks:
+            network:
+
+    adminer:
+        image: adminer
+        container_name: postgres_adminer
+        restart: always
+        ports:
+        - 8080:8080
+        networks: 
+            network:
+
+volumes:
+    postgresVolume:
+
+networks: 
+    # create Network By Default with directory name
+    network:

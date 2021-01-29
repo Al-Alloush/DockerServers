@@ -1,0 +1,6 @@
+Flask
+Flask-SocketIO
+pytest
+eventlet
+psycopg2
+pygresql
