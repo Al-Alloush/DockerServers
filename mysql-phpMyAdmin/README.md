@@ -66,14 +66,11 @@ ___
 ### 5. Login in php myAdmin
 
  ```
- > docker inspect <mysql container name /id>
- then get the hostring IPAddress
- >"NetworkSettings": {
-    "Networks": {
-        "mysql_netowrk": {
-            "IPAddress": "172.xx.xx.xx"
-
- >  Server: <the IPAddress>  // not that localhost not working
+ >  Hosting: IPAddress // to find it, inspect mysql container then search  IPAddress
+                            "NetworkSettings": {
+                                "Networks": {
+                                    "mysql_netowrk": {
+                                        "IPAddress": "172.xx.xx.xx"
  >  Uersname: root
  >  Password: my-pass   // or change it in docker-compose.yml  - MYSQL_ROOT_PASSWORD=my-pass
 
