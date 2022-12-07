@@ -1,0 +1,21 @@
+version: '3.6'
+services:
+    mssql-server:
+        image: "mcr.microsoft.com/mssql/server:2019-latest"
+        container_name: mssql_server
+        environment:
+            - ACCEPT_EULA=Y
+            - SA_PASSWORD=!QAY1qay
+            - MSSQL_PID=Standard
+        ports:
+            - 1433:1433
+        networks:
+            network:
+        #restart: always
+
+
+networks:
+    # create Network By Default with directory name
+    network:
+        name: "mssql-server-net"
+    
