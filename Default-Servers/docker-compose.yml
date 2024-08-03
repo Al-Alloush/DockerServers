@@ -1,0 +1,77 @@
+version: '3.6'
+services:
+    redis:
+        image: "redis:latest"
+        container_name: redis
+        hostname: redis
+        volumes:
+          - type: volume
+            source: redisdata
+            target: /data
+        ports:
+          - "6379:6379"
+        networks:
+            - easyapiservices_ums
+        #restart: always
+    neinredis-commander:
+        image: rediscommander/redis-commander:latest
+        container_name: redis-commander
+        hostname: redis-commander
+        # without this: Redis error Error: connect ECONNREFUSED 127.0.0.1:6379
+        environment:
+            - REDIS_HOSTS=local:redis:6379
+        ports:
+            - "8081:8081"
+        networks:
+            - easyapiservices_ums
+        #restart: always
+    zookeeper:
+        image: confluentinc/cp-zookeeper:latest
+        container_name: zookeeper
+        ports:
+            - 2181:2181
+        environment:
+            ZOOKEEPER_CLIENT_PORT: 2181
+            ZOOKEEPER_TICK_TIME: 2000
+        networks:
+            - easyapiservices_ums
+        restart: always
+    kafka:
+        image: confluentinc/cp-kafka:latest
+        container_name: kafka
+        depends_on:
+            - zookeeper
+        ports:
+            - 9092:9092
+        environment:
+            KAFKA_BROKER_ID: 001
+            KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+            KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_HOST://localhost:29092
+            KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+            KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+            KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+        networks:
+            - easyapiservices_ums
+        restart: always
+    # MMSQL 
+    mssql-server:
+        image: "mcr.microsoft.com/mssql/server:2022-latest"
+        container_name: mssql_server
+        environment:
+            - ACCEPT_EULA=Y
+            - SA_PASSWORD=!QAY1qay
+            - MSSQL_PID=Standard
+        ports:
+            - 1433:1433
+        restart: always
+        networks:
+            - easyapiservices_ums
+volumes:
+    redisdata:
+    
+networks:
+    easyapiservices_ums:
+        driver: bridge
+        name: easyapiservices_ums
+        
+    
